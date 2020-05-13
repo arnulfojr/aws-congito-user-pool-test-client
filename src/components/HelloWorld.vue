@@ -8,19 +8,21 @@
       <input type="password" placeholder="Password" v-model="password" />
     </div>
     <div>
-      <input v-model="name" placeholder="Set your name" type="text" />
-    </div>
-    <div>
       <button @click="authenticate">
         LogIn
       </button>
     </div>
     <div v-if="requiresNewPassword">
-      <input
-        placeholder="New Password"
-        v-model="newPassword"
-        type="password"
-      />
+      <div>
+        <input v-model="name" placeholder="Set your name" type="text" />
+      </div>
+      <div>
+        <input
+          placeholder="New Password"
+          v-model="newPassword"
+          type="password"
+        />
+      </div>
     </div>
     <div v-if="requiresNewPassword">
       <button @click="setNewPassword">
@@ -88,9 +90,10 @@ export default {
         .catch(err => {
           // This call fails because the std attribute is not mutable
           console.error(err);
-          alert(err);
+          alert(err.message);
         });
     },
+    /* not used but set for completion */
     async changePassword() {
       await Auth.changePassword(this.user, this.password, this.newPassword);
       this.user = await Auth.currentAuthenticatedUser();
