@@ -8,24 +8,30 @@
       <input type="password" placeholder="Password" v-model="password" />
     </div>
     <div>
-      <button @click="authenticate">
+      <button @click="authenticate" type="button">
         LogIn
       </button>
     </div>
     <div v-if="requiresNewPassword">
       <div>
-        <input v-model="name" placeholder="Set your name" type="text" />
+        <input
+          v-model="name"
+          placeholder="Set your name"
+          type="text"
+          name="name"
+        />
       </div>
       <div>
         <input
           placeholder="New Password"
           v-model="newPassword"
           type="password"
+          name="new-password"
         />
       </div>
     </div>
     <div v-if="requiresNewPassword">
-      <button @click="setNewPassword">
+      <button @click="setNewPassword" name="change-password">
         Change password and save info
       </button>
     </div>
@@ -37,11 +43,9 @@ import Auth from "@aws-amplify/auth";
 
 export default {
   name: "HelloWorld",
-  props: {
-    msg: String,
-  },
   data() {
     return {
+      msg: "Welcome to Your Vue.js App",
       email: "",
       password: "",
       newPassword: "",
@@ -65,8 +69,8 @@ export default {
           name: this.name,
         },
       })
-        .then(user => (this.user = user))
-        .catch(err => {
+        .then((user) => (this.user = user))
+        .catch((err) => {
           alert(err);
           console.error(err);
         });
@@ -77,17 +81,18 @@ export default {
         username: this.email,
         password: this.password,
       })
-        .then(user => (this.user = user))
-        .catch(err => {
+        .then((user) => (this.user = user))
+        .catch((err) => {
           console.error(err);
           alert(err.message);
         });
     },
     setNewPassword() {
-      const requiredParams = { name: this.name }; // CDK's fullname === name
-      Auth.completeNewPassword(this.user, this.password, requiredParams)
-        .then(user => (this.user = user))
-        .catch(err => {
+      // Bug in CDK can't do mutable attr.
+      // const requiredParams = { name: this.name }; // CDK's fullname === name
+      Auth.completeNewPassword(this.user, this.password, {})
+        .then((user) => (this.user = user))
+        .catch((err) => {
           // This call fails because the std attribute is not mutable
           console.error(err);
           alert(err.message);

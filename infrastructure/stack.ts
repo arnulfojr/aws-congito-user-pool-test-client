@@ -17,7 +17,6 @@ export default class AppStack extends cdk.Stack {
       },
       requiredAttributes: {
         email: true,
-        fullname: true, // our client will try to update this requiredAttribute
       },
       userInvitation: {
         emailSubject: "Welcome!",
